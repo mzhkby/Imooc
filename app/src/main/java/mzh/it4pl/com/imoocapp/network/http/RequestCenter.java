@@ -6,6 +6,8 @@ import mzh.it4pl.com.httpsdk.okHttp.listener.DisposeDataListener;
 import mzh.it4pl.com.httpsdk.okHttp.request.CommonRequest;
 import mzh.it4pl.com.httpsdk.okHttp.request.RequestParams;
 import mzh.it4pl.com.imoocapp.module.recommand.BaseRecommandModel;
+import mzh.it4pl.com.imoocapp.module.update.UpdateModel;
+import mzh.it4pl.com.imoocapp.module.user.User;
 
 /**
  * @author: 马中辉
@@ -26,5 +28,30 @@ public class RequestCenter {
      */
     public static void requestRecommandData(DisposeDataListener listener){
         RequestCenter.postRequest(HttpConstants.HOME_RECOMMAND,null,listener, BaseRecommandModel.class);
+    }
+
+    /**
+     * 用户登陆请求
+     *
+     * @param listener
+     * @param userName
+     * @param passwd
+     */
+    public static void login(String userName, String passwd, DisposeDataListener listener) {
+
+        RequestParams params = new RequestParams();
+        params.put("mb", userName);
+        params.put("pwd", passwd);
+        RequestCenter.postRequest(HttpConstants.LOGIN, params, listener, User.class);
+    }
+
+    /**
+     * 应用版本号请求
+     *
+     * @param listener
+     */
+    public static void checkVersion(DisposeDataListener listener) {
+        RequestCenter.postRequest(HttpConstants.CHECK_UPDATE,
+                null, listener, UpdateModel.class);
     }
 }

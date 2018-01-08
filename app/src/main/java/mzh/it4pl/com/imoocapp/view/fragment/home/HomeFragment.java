@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -94,6 +95,22 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
         mAdapter = new CourseAdapter(mContext, list);
         mListView.setAdapter(mAdapter);
+
+        /**
+         * 为ListView添加滑动事件监听
+         */
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                mAdapter.updateAdInScrollView();
+            }
+        });
     }
 
     /**

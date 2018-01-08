@@ -432,6 +432,9 @@ public class CustomVideoView extends RelativeLayout implements View.OnClickListe
             mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
                 @Override
                 public void onSeekComplete(MediaPlayer mp) {
+                    /**
+                     * 跳转事件结束后，暂停视频
+                     */
                     Log.d(TAG, "do seek and pause");
                     mediaPlayer.pause();
                     mHandler.removeCallbacksAndMessages(null);
@@ -706,9 +709,9 @@ public class CustomVideoView extends RelativeLayout implements View.OnClickListe
      */
     public interface ADVideoPlayerListener {
 
-        public void onBufferUpdate(int time);
+        public void onBufferUpdate(int time);//视频播放器播放到了第几秒
 
-        public void onClickFullScreenBtn();
+        public void onClickFullScreenBtn();//跳转全屏播放的事件监听
 
         public void onClickVideo();
 

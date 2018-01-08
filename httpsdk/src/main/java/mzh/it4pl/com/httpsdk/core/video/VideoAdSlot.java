@@ -28,7 +28,7 @@ public class VideoAdSlot implements CustomVideoView.ADVideoPlayerListener {
      * UI
      */
     private CustomVideoView mVideoView;
-    private ViewGroup mParentView;
+    private ViewGroup mParentView;//要添加到的父容器中
     /**
      * Data
      */
@@ -108,6 +108,9 @@ public class VideoAdSlot implements CustomVideoView.ADVideoPlayerListener {
         }
     }
 
+    /**
+     * 实现滑入播放，滑出暂停功能
+     */
     public void updateAdInScrollView() {
         int currentArea = Utils.getVisiblePercent(mParentView);
         //小于0表示未出现在屏幕上，不做任何处理
@@ -122,6 +125,7 @@ public class VideoAdSlot implements CustomVideoView.ADVideoPlayerListener {
             //进入自动暂停状态
             if (canPause) {
                 pauseVideo(true);
+                //滑动事件过滤
                 canPause = false;
             }
             lastArea = 0;
@@ -130,6 +134,7 @@ public class VideoAdSlot implements CustomVideoView.ADVideoPlayerListener {
             return;
         }
 
+        //当视频进入真正的暂停状态时走此case
         if (isRealPause() || isComplete()) {
             //进入手动暂停或者播放结束，播放结束和不满足自动播放条件都作为手动暂停
             pauseVideo(false);
@@ -170,16 +175,19 @@ public class VideoAdSlot implements CustomVideoView.ADVideoPlayerListener {
         //获取videoview在当前界面的属性
         Bundle bundle = Utils.getViewProperty(mParentView);
         mParentView.removeView(mVideoView);
+        //创建全屏dialog
         VideoFullDialog dialog = new VideoFullDialog(mContext, mVideoView, mXAdInstance,
                 mVideoView.getCurrentPosition());
         dialog.setListener(new VideoFullDialog.FullToSmallListener() {
             @Override
             public void getCurrentPlayPosition(int position) {
+                //全屏视频播放的时候点击了返回
                 backToSmallMode(position);
             }
 
             @Override
             public void playComplete() {
+                //全屏播放完成以后的事件回调
                 bigPlayComplete();
             }
         });
@@ -188,23 +196,37 @@ public class VideoAdSlot implements CustomVideoView.ADVideoPlayerListener {
         dialog.show();
     }
 
+    /**
+     * 返回小屏的时候调用
+     * @param position
+     */
     private void backToSmallMode(int position) {
         if (mVideoView.getParent() == null) {
             mParentView.addView(mVideoView);
         }
-        mVideoView.setTranslationY(0); //防止动画导致偏离父容器
+        //防止动画导致偏离父容器
+        mVideoView.setTranslationY(0);
+        //显示我们的全屏按钮
         mVideoView.isShowFullBtn(true);
+        //小屏静音播放
         mVideoView.mute(true);
+        //重新设置监听为我们的业务逻辑层
         mVideoView.setListener(this);
+        //使播放器跳到指定位置并且播放
         mVideoView.seekAndResume(position);
-        canPause = true; // 标为可自动暂停
+        // 标为可自动暂停
+        canPause = true;
     }
 
+    /**
+     * 全屏播放结束时的事件回调
+     */
     private void bigPlayComplete() {
         if (mVideoView.getParent() == null) {
             mParentView.addView(mVideoView);
         }
-        mVideoView.setTranslationY(0); //防止动画导致偏离父容器
+        //防止动画导致偏离父容器
+        mVideoView.setTranslationY(0);
         mVideoView.isShowFullBtn(true);
         mVideoView.mute(true);
         mVideoView.setListener(this);
