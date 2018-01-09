@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import cn.sharesdk.framework.Platform;
 import de.hdodenhof.circleimageview.CircleImageView;
 import mzh.it4pl.com.httpsdk.activity.AdBrowserActivity;
 import mzh.it4pl.com.httpsdk.adutil.Utils;
@@ -25,6 +26,8 @@ import mzh.it4pl.com.httpsdk.core.AdContextInterface;
 import mzh.it4pl.com.httpsdk.core.video.VideoAdContext;
 import mzh.it4pl.com.httpsdk.imageloader.ImageLoaderManager;
 import mzh.it4pl.com.imoocapp.R;
+import mzh.it4pl.com.imoocapp.activity.PhotoViewActivity;
+import mzh.it4pl.com.imoocapp.share.ShareDialog;
 
 /**
  * @author: 马中辉
@@ -41,14 +44,16 @@ public class CourseAdapter extends BaseAdapter {
     private ViewHolder mViewHolder;
     private ImageLoaderManager mImagerLoader;
     private VideoAdContext mAdsdkContext;
-    private List<String> urls = new ArrayList<>();
-    public CourseAdapter(Context context, List<Integer> list){
+    private ArrayList<String> urls = new ArrayList<>();
+
+    public CourseAdapter(Context context, List<Integer> list) {
         this.context = context;
         this.list = list;
         layoutInflater = LayoutInflater.from(context);
         mImagerLoader = ImageLoaderManager.getInstance(context);
 
     }
+
     @Override
     public int getCount() {
         return list.size();
@@ -66,8 +71,8 @@ public class CourseAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView==null){
-            if(position%3==0){
+        if (convertView == null) {
+            if (position % 3 == 0) {
                 //显示video卡片
                 mViewHolder = new ViewHolder();
                 convertView = layoutInflater.inflate(R.layout.item_video_layout, parent, false);
@@ -97,12 +102,12 @@ public class CourseAdapter extends BaseAdapter {
                         context.startActivity(intent);
                     }
                 });
-            }else{
+            } else {
                 mViewHolder = new ViewHolder();
-                convertView = layoutInflater.inflate(R.layout.item_product_card_one_layout,parent,false);
-                mViewHolder.mLogoView =  convertView.findViewById(R.id.item_logo_view);
+                convertView = layoutInflater.inflate(R.layout.item_product_card_one_layout, parent, false);
+                mViewHolder.mLogoView = convertView.findViewById(R.id.item_logo_view);
                 mViewHolder.mTitleView = convertView.findViewById(R.id.item_title_view);
-                mViewHolder.mInfoView =  convertView.findViewById(R.id.item_info_view);
+                mViewHolder.mInfoView = convertView.findViewById(R.id.item_info_view);
                 mViewHolder.mFooterView = convertView.findViewById(R.id.item_footer_view);
                 mViewHolder.mPriceView = convertView.findViewById(R.id.item_price_view);
                 mViewHolder.mFromView = convertView.findViewById(R.id.item_from_view);
@@ -111,16 +116,30 @@ public class CourseAdapter extends BaseAdapter {
             }
 
             convertView.setTag(mViewHolder);
-        }else{
+        } else {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
 
-        if(position%3==0){
-        }else{
+        if (position % 3 == 0) {
+            mViewHolder.mShareView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareDialog dialog = new ShareDialog(context, false);
+                    dialog.setShareType(Platform.SHARE_IMAGE);
+                    dialog.setShareTitle("慕课网");
+                    dialog.setShareTitleUrl("http://www.imooc.com");
+                    dialog.setShareText("慕课网");
+                    dialog.setShareSite("imooc");
+                    dialog.setShareSiteUrl("http://www.imooc.com");
+                    dialog.setImagePhoto("http://e.hiphotos.baidu.com/image/pic/item/f7246b600c338744e7762fb6580fd9f9d62aa04c.jpg");
+                    dialog.show();
+                }
+            });
+        } else {
             urls.clear();
             Random rand = new Random();
-            int next = rand.nextInt(15)+1;
-            for (int i=0;i<next;i++){
+            int next = rand.nextInt(15) + 1;
+            for (int i = 0; i < next; i++) {
                 urls.add("http://e.hiphotos.baidu.com/image/pic/item/f7246b600c338744e7762fb6580fd9f9d62aa04c.jpg");
             }
 
@@ -130,6 +149,15 @@ public class CourseAdapter extends BaseAdapter {
             for (String url : urls) {
                 mViewHolder.mProductLayout.addView(createImageView(url));
             }
+
+            mViewHolder.mProductLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, PhotoViewActivity.class);
+                    intent.putStringArrayListExtra(PhotoViewActivity.PHOTO_LIST, urls);
+                    context.startActivity(intent);
+                }
+            });
         }
 
         return convertView;

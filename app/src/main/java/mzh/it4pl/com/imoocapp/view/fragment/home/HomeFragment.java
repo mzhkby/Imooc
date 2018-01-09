@@ -52,6 +52,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
      */
     private CourseAdapter mAdapter;
     private List<Integer> list = new ArrayList<>();
+    private ArrayList<String> urls = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -150,7 +151,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
     }
 
     @Override

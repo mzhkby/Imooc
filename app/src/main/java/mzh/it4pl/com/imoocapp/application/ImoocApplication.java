@@ -2,6 +2,8 @@ package mzh.it4pl.com.imoocapp.application;
 
 import android.app.Application;
 
+import mzh.it4pl.com.imoocapp.share.ShareManager;
+
 /**
  * @author :马中辉
  * Email:A908391541@163.com
@@ -17,9 +19,17 @@ public class ImoocApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mApplication = this;
+        initShareSDK();
     }
 
     public static ImoocApplication getInstance(){
         return mApplication;
+    }
+
+    /**
+     * 初始化ShareSDK
+     */
+    public void initShareSDK(){
+        ShareManager.initSDK(this);
     }
 }

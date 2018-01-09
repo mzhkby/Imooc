@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.sharesdk.framework.Platform;
 import de.hdodenhof.circleimageview.CircleImageView;
 import mzh.it4pl.com.httpsdk.adutil.ImageLoaderUtil;
 import mzh.it4pl.com.imoocapp.R;
@@ -21,6 +22,7 @@ import mzh.it4pl.com.imoocapp.activity.VideoSettingActivity;
 import mzh.it4pl.com.imoocapp.manager.UserManager;
 import mzh.it4pl.com.imoocapp.module.update.UpdateInfo;
 import mzh.it4pl.com.imoocapp.service.update.UpdateService;
+import mzh.it4pl.com.imoocapp.share.ShareDialog;
 import mzh.it4pl.com.imoocapp.util.Util;
 import mzh.it4pl.com.imoocapp.view.CommonDialog;
 import mzh.it4pl.com.imoocapp.view.MyQrCodeDialog;
@@ -38,7 +40,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
      */
     private View mContentView;
     private RelativeLayout mLoginLayout;
-    private CircleImageView mPhotoView,mUserPhotoView;
+    private CircleImageView mPhotoView, mUserPhotoView;
     private TextView mLoginInfoView;
     private TextView mLoginView;
     private RelativeLayout mLoginedLayout;
@@ -133,6 +135,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.update_view:
                 checkVersion();
                 break;
+            case R.id.login_layout:
             case R.id.login_view:
                 if (!UserManager.getUserManager().hasLogin()) {
                     toLogin();
@@ -148,6 +151,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                     dialog.show();
                 }
                 break;
+            case R.id.share_imooc_view:
+                shareFriend();
+                break;
             default:
                 break;
         }
@@ -159,6 +165,20 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private void toLogin() {
         Intent intent = new Intent(mContext, LoginActivity.class);
         mContext.startActivity(intent);
+    }
+
+    /**
+     * 分享慕课网给好友
+     */
+    private void shareFriend() {
+        ShareDialog dialog = new ShareDialog(mContext, false);
+        dialog.setShareType(Platform.SHARE_TEXT);
+        dialog.setShareTitle("慕课网");
+        dialog.setShareTitleUrl("http://www.imooc.com");
+        dialog.setShareText("慕课网");
+        dialog.setShareSite("imooc");
+        dialog.setShareSiteUrl("http://www.imooc.com");
+        dialog.show();
     }
 
     /**

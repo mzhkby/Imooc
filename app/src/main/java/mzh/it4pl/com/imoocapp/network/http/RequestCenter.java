@@ -3,6 +3,7 @@ package mzh.it4pl.com.imoocapp.network.http;
 import mzh.it4pl.com.httpsdk.okHttp.CommonOkHttpClient;
 import mzh.it4pl.com.httpsdk.okHttp.listener.DisposeDataHandle;
 import mzh.it4pl.com.httpsdk.okHttp.listener.DisposeDataListener;
+import mzh.it4pl.com.httpsdk.okHttp.listener.DisposeDownloadListener;
 import mzh.it4pl.com.httpsdk.okHttp.request.CommonRequest;
 import mzh.it4pl.com.httpsdk.okHttp.request.RequestParams;
 import mzh.it4pl.com.imoocapp.module.recommand.BaseRecommandModel;
@@ -53,5 +54,10 @@ public class RequestCenter {
     public static void checkVersion(DisposeDataListener listener) {
         RequestCenter.postRequest(HttpConstants.CHECK_UPDATE,
                 null, listener, UpdateModel.class);
+    }
+
+    public static void downloadFile(String url, String path, DisposeDownloadListener listener) {
+        CommonOkHttpClient.downloadFile(CommonRequest.createGetRequest(url, null),
+                new DisposeDataHandle(listener, path));
     }
 }
